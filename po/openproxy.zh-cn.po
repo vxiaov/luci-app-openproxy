@@ -31,11 +31,11 @@ msgstr "备份文件"
 msgid "Backup File Restore Successful!"
 msgstr "备份文件恢复成功！"
 
-#: luasrc/view/openproxy/help.htm:47
+#: luasrc/view/openproxy/help.htm:53
 msgid "Clash Meta Core"
 msgstr "Clash Meta版本"
 
-#: luasrc/view/openproxy/help.htm:44
+#: luasrc/view/openproxy/help.htm:50
 msgid "Clash Mihomo Documentation"
 msgstr "Clash Meta教程文档(MiHoMo)"
 
@@ -43,11 +43,11 @@ msgstr "Clash Meta教程文档(MiHoMo)"
 msgid "Clash New Version"
 msgstr "Clash下载"
 
-#: luasrc/view/openproxy/help.htm:41
+#: luasrc/view/openproxy/help.htm:47
 msgid "Clash Official Documentation"
 msgstr "Clash官方文档(已经停更)"
 
-#: luasrc/view/openproxy/help.htm:14
+#: luasrc/view/openproxy/help.htm:20
 msgid "Combination of NAT and TPROXY modes."
 msgstr ""
 "NAT+TPROXY模式(默认方案): 利用NAT实现DNS转发，TPROXY透明代理除了DNS其他流量。"
@@ -68,9 +68,13 @@ msgstr "配置文件："
 msgid "Config Manage"
 msgstr "配置管理"
 
-#: luasrc/view/openproxy/help.htm:8
+#: luasrc/view/openproxy/help.htm:14
 msgid "Configuration Guide"
 msgstr "配置教程"
+
+#: luasrc/view/openproxy/help.htm:7
+msgid "Contract Me:"
+msgstr "当你需要帮助、或有更好想法，可通过下面方式沟通："
 
 #: luasrc/view/openproxy/main.htm:39
 msgid "Core"
@@ -96,7 +100,7 @@ msgstr "DNS配置"
 msgid "Dns Port:"
 msgstr "外部DNS端口:"
 
-#: luasrc/view/openproxy/help.htm:37
+#: luasrc/view/openproxy/help.htm:43
 msgid "Documentation & Resources"
 msgstr "文档与资源"
 
@@ -148,7 +152,7 @@ msgstr "解析IPv6:"
 msgid "IPv6 trans"
 msgstr "IPv6仅直连:"
 
-#: luasrc/view/openproxy/help.htm:11
+#: luasrc/view/openproxy/help.htm:17
 msgid ""
 "Learning how to configure the Clash YAML file will help you use it more "
 "easily."
@@ -258,32 +262,34 @@ msgstr "使用第三方DNS服务:"
 msgid "Yacd"
 msgstr "Yacd控制面板"
 
-#: luasrc/view/openproxy/help.htm:23
+#: luasrc/view/openproxy/help.htm:29
 msgid "disable ipv6 if your proxy doesn't have public ipv6 address"
 msgstr "如果你的代理节点没有公网IPv6地址，请禁用IPv6选项。"
 
-#: luasrc/view/openproxy/help.htm:32
+#: luasrc/view/openproxy/help.htm:38
 msgid "enable custom dns if you want to use smartdns/unbound dns service."
 msgstr ""
 "如果你想使用smartdns/unbound等作为DNS服务，请启用 第三方DNS服务，并填写自定义"
 "的DNS服务端口，应用后立刻生效。"
 
-#: luasrc/view/openproxy/help.htm:20
-msgid "enable ipv6 if your proxy node have public ipv6 address"
-msgstr "如果你的代理节点有公网IPv6地址，可以启用IPv6选项，这样就可以通过IPv6地址访问外网了。"
-
 #: luasrc/view/openproxy/help.htm:26
+msgid "enable ipv6 if your proxy node have public ipv6 address"
+msgstr ""
+"如果你的代理节点有公网IPv6地址，可以启用IPv6选项，这样就可以通过IPv6地址访问"
+"外网了。"
+
+#: luasrc/view/openproxy/help.htm:32
 msgid ""
 "enable ipv6_trans option if you want to use your domastic public ipv6 "
 "address to access the internet"
 msgstr ""
 "如果您想使用您的国内公共 IPv6 地址访问互联网，可以 启用 IPv6仅直连 选项。"
 
-#: luasrc/view/openproxy/help.htm:29
+#: luasrc/view/openproxy/help.htm:35
 msgid "how to use dns option?"
 msgstr "如何配置DNS选项？"
 
-#: luasrc/view/openproxy/help.htm:17
+#: luasrc/view/openproxy/help.htm:23
 msgid "how to use ipv6?"
 msgstr "如何使用IPv6地址？"
 
@@ -291,7 +297,7 @@ msgstr "如何使用IPv6地址？"
 msgid "invalid file type"
 msgstr "无效的文件类型"
 
-#: luasrc/view/openproxy/help.htm:44
+#: luasrc/view/openproxy/help.htm:50
 msgid "mihomo config example"
 msgstr "MiHoMo 配置示例"
 
