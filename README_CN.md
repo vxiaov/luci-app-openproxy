@@ -7,7 +7,10 @@
 
 一款针对openWRT SNAPSHOT发行版系统开发的 Clash 代理插件。
 
-[![Build openWRT ipk/apk package](https://github.com/vxiaov/luci-app-openproxy/actions/workflows/build_new_package.yml/badge.svg)](https://github.com/vxiaov/luci-app-openproxy/actions/workflows/build_new_package.yml)
+| Latest Version  | Build Status    | Chat   |
+| :-------------- | :-------------  | :------|
+| [![Version](https://img.shields.io/github/v/tag/vxiaov/luci-app-openproxy?label=version)](https://github.com/vxiaov/luci-app-openproxy/releases/latest)| [![Build ipk/apk](https://github.com/vxiaov/luci-app-openproxy/actions/workflows/build_new_package.yml/badge.svg)](https://github.com/vxiaov/luci-app-openproxy/actions/workflows/build_new_package.yml) | [![Telegram 群组](https://img.shields.io/badge/加入-Telegram%20群组-red)](https://t.me/share_proxy_001/30302) |
+
 
 ## 功能支持
 > 由于TUN性能比较低且CPU资源消耗较多，本插件出于简化功能、性能优先因素不会支持TUN模式。

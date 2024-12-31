@@ -7,7 +7,11 @@
 
 A Clash proxy plugin developed for the OpenWRT SNAPSHOT system. For the Chinese [README_CN.md](README_CN.md).
 
-[![Build openWRT ipk/apk package](https://github.com/vxiaov/luci-app-openproxy/actions/workflows/build_new_package.yml/badge.svg)](https://github.com/vxiaov/luci-app-openproxy/actions/workflows/build_new_package.yml)
+| Latest Version  | Build Status    | Chat   |
+| :-------------- | :-------------  | :------|
+| [![Version](https://img.shields.io/github/v/tag/vxiaov/luci-app-openproxy?label=version)](https://github.com/vxiaov/luci-app-openproxy/releases/latest)| [![Build ipk/apk](https://github.com/vxiaov/luci-app-openproxy/actions/workflows/build_new_package.yml/badge.svg)](https://github.com/vxiaov/luci-app-openproxy/actions/workflows/build_new_package.yml) | [![Telegram 群组](https://img.shields.io/badge/加入-Telegram%20群组-red)](https://t.me/share_proxy_001/30302) |
+
+
 
 ## Feature Support
 > Due to the low performance of TUN and high CPU resource consumption, this plugin will not support TUN mode for the sake of simplifying functionality and prioritizing performance.
