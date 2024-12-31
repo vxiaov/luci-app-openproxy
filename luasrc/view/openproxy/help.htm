@@ -1,0 +1,55 @@
+<%+header%>
+    <h2>
+        <%=translate("Help & Documentation")%>
+    </h2>
+
+    <div class="cbi-section">
+        <h3>
+            <%=translate("Configuration Guide")%>
+        </h3>
+        <p>
+            <%=translate("Learning  how to configure the Clash YAML file will help you use it more easily.")%>
+        </p>
+        <p>
+            <%=translate("Combination of NAT and TPROXY modes.")%>
+        </p>
+        <h3>
+            <%=translate("how to use ipv6?")%>
+        </h3>
+        <p>
+            <%=translate("enable ipv6 if your proxy node have public ipv6 address")%>
+        </p>
+        <p>
+            <%=translate("disable ipv6 if your proxy doesn't have public ipv6 address")%>
+        </p>
+        <p>
+            <%=translate("enable ipv6_trans option if you want to use your domastic public ipv6 address to access the internet")%>
+        </p>
+        <h3>
+            <%=translate("how to use dns option?")%>
+        </h3>
+        <p>
+            <%=translate("enable custom dns if you want to use smartdns/unbound dns service.")%>
+        </p>
+
+        <div class="cbi-value">
+            <h3>
+                <%=translate("Documentation & Resources")%>
+            </h3>
+            <ol>
+                <li>
+                    <a target="_blank" href="https://clash.wiki/configuration/configuration-reference.html"><%=translate("Clash Official Documentation")%></a>
+                </li>
+                <li>
+                    <a target="_blank" href="https://wiki.metacubex.one/config/"><%=translate("Clash Mihomo Documentation")%></a> :<a target="_blank" href="https://github.com/MetaCubeX/mihomo/blob/Meta/docs/config.yaml"><%:mihomo config example%></a>.
+                </li>
+                <li>
+                    <a href="https://github.com/MetaCubeX/mihomo/releases/latest" target="_blank"><%:Clash Meta Core%></a>
+                </li>
+            </ol>
+        </div>
+        <p>
+        </p>
+    </div>
+
+    <%+footer%>

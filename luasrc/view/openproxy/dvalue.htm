@@ -1,0 +1,15 @@
+<%+cbi/valueheader%>
+<div class="cbi-value-field" style="text-align: center; margin:2% auto; display: block; width: 100%; text-overflow: ellipsis;">
+	<div>
+		<%:Note: Please Upload File According To File Type, File Will Be Saved To The Prompt Path%>
+	</div>
+	<div style="margin-top: 1%;" id="_service_tips">
+		<b>
+		<%
+			local val = self:cfgvalue(section) or self.default or ""
+			write(pcdata(val))
+		%>
+		</b>
+	</div>
+</div>
+<%+cbi/valuefooter%>

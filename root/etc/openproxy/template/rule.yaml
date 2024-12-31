@@ -1,0 +1,52 @@
+rules:
+  ####################################################
+  # ！！！！ 规则配置参考示例，请不要修改此配置。！！！
+  ####################################################
+  - DOMAIN,ad.com,REJECT
+  - DOMAIN-SUFFIX,google.com,auto
+  - DOMAIN-KEYWORD,google,auto
+  - DOMAIN-REGEX,^abc.*com,PROXY
+  - GEOSITE,youtube,PROXY
+
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR6,2620:0:2d0:200::7/32,auto
+  - IP-SUFFIX,8.8.8.8/24,PROXY
+  - IP-ASN,13335,DIRECT
+  - GEOIP,CN,DIRECT
+
+  - SRC-GEOIP,cn,DIRECT
+  - SRC-IP-ASN,9808,DIRECT
+  - SRC-IP-CIDR,192.168.1.201/32,DIRECT
+  - SRC-IP-SUFFIX,192.168.1.201/8,DIRECT
+
+  - DST-PORT,80,DIRECT
+  - SRC-PORT,7777,DIRECT
+
+  - IN-PORT,7890,PROXY
+  - IN-TYPE,SOCKS/HTTP,PROXY
+  - IN-USER,mihomo,PROXY
+  - IN-NAME,ss,PROXY
+
+  - PROCESS-PATH,/usr/bin/wget,PROXY
+  - PROCESS-PATH,C:\Program Files\Google\Chrome\Application\chrome.exe,PROXY
+  - PROCESS-PATH-REGEX,.*bin/wget,PROXY
+  - PROCESS-PATH-REGEX,(?i).*Application\\chrome.*,PROXY
+
+  - PROCESS-NAME,curl,PROXY
+  - PROCESS-NAME,chrome.exe,PROXY
+  - PROCESS-NAME,com.termux,PROXY
+  - PROCESS-NAME-REGEX,curl$,PROXY
+  - PROCESS-NAME-REGEX,(?i)Telegram,PROXY
+  - PROCESS-NAME-REGEX,.*telegram.*,PROXY
+  - UID,1001,DIRECT
+
+  - NETWORK,udp,DIRECT
+  - DSCP,4,DIRECT
+
+  - RULE-SET,providername,proxy
+  - AND,((DOMAIN,baidu.com),(NETWORK,UDP)),DIRECT
+  - OR,((NETWORK,UDP),(DOMAIN,baidu.com)),REJECT
+  - NOT,((DOMAIN,baidu.com)),PROXY
+  - SUB-RULE,(NETWORK,tcp),sub-rule
+
+  - MATCH,auto

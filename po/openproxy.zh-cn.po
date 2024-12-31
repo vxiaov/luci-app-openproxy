@@ -1,0 +1,312 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: openproxy\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: vxiaov\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: luasrc/view/openproxy/main.htm:67 luasrc/view/openproxy/options_dns.htm:21
+msgid "Apply"
+msgstr "应用"
+
+#: luasrc/view/openproxy/main.htm:80
+msgid "Arch Info"
+msgstr "CPU架构"
+
+#: luasrc/view/openproxy/options_upload.htm:37
+msgid "Backup"
+msgstr "快速备份配置"
+
+#: luasrc/view/openproxy/options_upload.htm:32
+msgid "Backup File"
+msgstr "备份文件"
+
+#: luasrc/model/cbi/openproxy/options.lua:108
+msgid "Backup File Restore Successful!"
+msgstr "备份文件恢复成功！"
+
+#: luasrc/view/openproxy/help.htm:47
+msgid "Clash Meta Core"
+msgstr "Clash Meta版本"
+
+#: luasrc/view/openproxy/help.htm:44
+msgid "Clash Mihomo Documentation"
+msgstr "Clash Meta教程文档(MiHoMo)"
+
+#: luasrc/view/openproxy/options_upload.htm:39
+msgid "Clash New Version"
+msgstr "Clash下载"
+
+#: luasrc/view/openproxy/help.htm:41
+msgid "Clash Official Documentation"
+msgstr "Clash官方文档(已经停更)"
+
+#: luasrc/view/openproxy/help.htm:14
+msgid "Combination of NAT and TPROXY modes."
+msgstr ""
+"NAT+TPROXY模式(默认方案): 利用NAT实现DNS转发，TPROXY透明代理除了DNS其他流量。"
+
+#: luasrc/view/openproxy/main.htm:53
+msgid "Config"
+msgstr "配置"
+
+#: luasrc/view/openproxy/options_upload.htm:27
+msgid "Config File"
+msgstr "配置文件"
+
+#: luasrc/view/openproxy/editor.htm:176
+msgid "Config File:"
+msgstr "配置文件："
+
+#: luasrc/model/cbi/openproxy/options.lua:41
+msgid "Config Manage"
+msgstr "配置管理"
+
+#: luasrc/view/openproxy/help.htm:8
+msgid "Configuration Guide"
+msgstr "配置教程"
+
+#: luasrc/view/openproxy/main.htm:39
+msgid "Core"
+msgstr "内核"
+
+#: luasrc/view/openproxy/options_upload.htm:30
+msgid "Core File"
+msgstr "内核文件"
+
+#: luasrc/view/openproxy/options_upload.htm:31
+msgid "Country.mmdb"
+msgstr "Country.mmdb文件"
+
+#: luasrc/view/openproxy/options_dns.htm:3
+msgid "Custom DNS Config"
+msgstr "使用第三方DNS服务(需要自行提前启用第三方DNS服务)"
+
+#: luasrc/model/cbi/openproxy/options.lua:122
+msgid "Dns Config"
+msgstr "DNS配置"
+
+#: luasrc/view/openproxy/options_dns.htm:14
+msgid "Dns Port:"
+msgstr "外部DNS端口:"
+
+#: luasrc/view/openproxy/help.htm:37
+msgid "Documentation & Resources"
+msgstr "文档与资源"
+
+#: luasrc/controller/openproxy.lua:23
+msgid "Edit"
+msgstr "编辑"
+
+#: luasrc/view/openproxy/editor.htm:205
+msgid "Editor shortcut Ctrl+S save"
+msgstr "按 Ctrl+S 保存文件"
+
+#: luasrc/view/openproxy/editor.htm:205
+msgid "Editor shortcut Esc normal"
+msgstr "按 Esc 返回正常显示"
+
+#: luasrc/view/openproxy/editor.htm:205
+msgid "Editor shortcut F2 fullScreen"
+msgstr "按 F2 全屏显示"
+
+#: luasrc/view/openproxy/main.htm:15
+msgid "Enable"
+msgstr "启用"
+
+#: luasrc/model/cbi/openproxy/options.lua:91
+msgid "File saved to"
+msgstr "文件保存在 "
+
+#: luasrc/controller/openproxy.lua:27
+msgid "Help"
+msgstr "帮助"
+
+#: luasrc/view/openproxy/help.htm:3
+msgid "Help & Documentation"
+msgstr "文档帮助"
+
+#: luasrc/view/openproxy/main.htm:105
+msgid "IPv4"
+msgstr "IPv4地址"
+
+#: luasrc/view/openproxy/main.htm:111
+msgid "IPv6"
+msgstr "IPv6地址"
+
+#: luasrc/view/openproxy/main.htm:23
+msgid "IPv6 DNS"
+msgstr "解析IPv6:"
+
+#: luasrc/view/openproxy/main.htm:31
+msgid "IPv6 trans"
+msgstr "IPv6仅直连:"
+
+#: luasrc/view/openproxy/help.htm:11
+msgid ""
+"Learning how to configure the Clash YAML file will help you use it more "
+"easily."
+msgstr ""
+"多花一点时间学习了解配置clash yaml文件，这样可以帮助你更容易使用.文档与资源都"
+"在下面."
+
+#: luasrc/controller/openproxy.lua:21
+msgid "Main"
+msgstr "主页"
+
+#: luasrc/view/openproxy/main.htm:99
+msgid "Mode"
+msgstr "模式"
+
+#: luasrc/model/cbi/openproxy/options.lua:117
+msgid "No Specify Upload File"
+msgstr "没有指定上传文件"
+
+#: luasrc/view/openproxy/dvalue.htm:4
+msgid ""
+"Note: Please Upload File According To File Type, File Will Be Saved To The "
+"Prompt Path"
+msgstr "注意： 请根据选择的上传文件类型上传文件，确保文件名后缀符合要求。"
+
+#: luasrc/view/openproxy/main.htm:74
+msgid "OS Info"
+msgstr "系统"
+
+#: luasrc/controller/openproxy.lua:20
+msgid "OpenProxy"
+msgstr "OpenProxy"
+
+#: luasrc/view/openproxy/main.htm:3
+msgid "OpenProxy - Main Page"
+msgstr "OpenProxy - 主页"
+
+#: luasrc/view/openproxy/options_upload.htm:38
+msgid "OpenProxy New Version"
+msgstr "OpenProxy新版本"
+
+#: luasrc/controller/openproxy.lua:25
+msgid "Options"
+msgstr "选项"
+
+#: luasrc/view/openproxy/main.htm:86
+msgid "Pkg Info"
+msgstr "包管理命令"
+
+#: luasrc/view/openproxy/editor.htm:186
+msgid "Proxy File:"
+msgstr "代理集："
+
+#: luasrc/view/openproxy/options_upload.htm:28
+msgid "Proxy Provider File"
+msgstr "自定义代理文件"
+
+#: luasrc/view/openproxy/editor.htm:181
+msgid "Rule File:"
+msgstr "规则集："
+
+#: luasrc/view/openproxy/options_upload.htm:29
+msgid "Rule Provider File"
+msgstr "自定义规则集"
+
+#: luasrc/view/openproxy/main.htm:189
+msgid "Running"
+msgstr "运行中"
+
+#: luasrc/view/openproxy/editor.htm:197
+msgid "Save"
+msgstr "保存"
+
+#: luasrc/view/openproxy/editor.htm:171
+msgid "Select Edit File"
+msgstr "编辑文件"
+
+#: luasrc/view/openproxy/main.htm:11
+msgid "Service panel"
+msgstr "服务面板"
+
+#: luasrc/view/openproxy/main.htm:93
+msgid "Status"
+msgstr "状态"
+
+#: luasrc/view/openproxy/main.htm:189
+msgid "Stoped"
+msgstr "已停止"
+
+#: luasrc/view/openproxy/editor.htm:191
+msgid "Template File:"
+msgstr "参考模板："
+
+#: luasrc/view/openproxy/options_upload.htm:36
+msgid "Upload"
+msgstr "上传配置文件"
+
+#: luasrc/view/openproxy/options_upload.htm:25
+msgid "Upload File Type"
+msgstr "上传文件类型"
+
+#: luasrc/view/openproxy/options_dns.htm:6
+msgid "Use Custom DNS:"
+msgstr "使用第三方DNS服务:"
+
+#: luasrc/view/openproxy/main.htm:117
+msgid "Yacd"
+msgstr "Yacd控制面板"
+
+#: luasrc/view/openproxy/help.htm:23
+msgid "disable ipv6 if your proxy doesn't have public ipv6 address"
+msgstr "如果你的代理节点没有公网IPv6地址，请禁用IPv6选项。"
+
+#: luasrc/view/openproxy/help.htm:32
+msgid "enable custom dns if you want to use smartdns/unbound dns service."
+msgstr ""
+"如果你想使用smartdns/unbound等作为DNS服务，请启用 第三方DNS服务，并填写自定义"
+"的DNS服务端口，应用后立刻生效。"
+
+#: luasrc/view/openproxy/help.htm:20
+msgid "enable ipv6 if your proxy node have public ipv6 address"
+msgstr "如果你的代理节点有公网IPv6地址，可以启用IPv6选项，这样就可以通过IPv6地址访问外网了。"
+
+#: luasrc/view/openproxy/help.htm:26
+msgid ""
+"enable ipv6_trans option if you want to use your domastic public ipv6 "
+"address to access the internet"
+msgstr ""
+"如果您想使用您的国内公共 IPv6 地址访问互联网，可以 启用 IPv6仅直连 选项。"
+
+#: luasrc/view/openproxy/help.htm:29
+msgid "how to use dns option?"
+msgstr "如何配置DNS选项？"
+
+#: luasrc/view/openproxy/help.htm:17
+msgid "how to use ipv6?"
+msgstr "如何使用IPv6地址？"
+
+#: luasrc/model/cbi/openproxy/options.lua:73
+msgid "invalid file type"
+msgstr "无效的文件类型"
+
+#: luasrc/view/openproxy/help.htm:44
+msgid "mihomo config example"
+msgstr "MiHoMo 配置示例"
+
+#: luasrc/model/cbi/openproxy/options.lua:81
+msgid "open file error."
+msgstr "文件打开失败."
+
+#: luasrc/view/openproxy/editor.htm:195
+msgid "toggle fold"
+msgstr "切换折叠"
+
+#: luasrc/view/openproxy/editor.htm:196
+msgid "toogle theme"
+msgstr "切换主题"
+
+#: luasrc/controller/openproxy.lua:305
+msgid "unknown"
+msgstr "未知"

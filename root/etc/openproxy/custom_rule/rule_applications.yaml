@@ -1,0 +1,6 @@
+payload:
+  # 软路由本地应用直连
+  - PROCESS-NAME,ntpd,DIRECT
+  - PROCESS-NAME,syncthing,DIRECT
+  - PROCESS-NAME,minidlnad,DIRECT
+  - PROCESS-NAME,frpc,DIRECT

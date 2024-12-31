@@ -1,0 +1,214 @@
+<%+header%>
+    <h2>
+        <%:OpenProxy - Main Page%>
+    </h2>
+    <div style="margin: 10px 0; text-align: center" id="_service_tips">
+        <b>Loading...</b>
+    </div>
+    <form method="post">
+        <fieldset class="cbi-section">
+            <legend>
+                <%:Service panel%>
+            </legend>
+            <div class="cbi-value">
+                <label class="cbi-field-title">
+                    <%:Enable%>:
+                </label>
+                <div class="cbi-value-field">
+                    <input type="checkbox" name="enable" id="enable_toggle" />
+                </div>
+            </div>
+            <div class="cbi-value">
+                <label class="cbi-field-title">
+                    <%:IPv6 DNS%>
+                </label>
+                <div class="cbi-value-field">
+                    <input type="checkbox" id="enable_ipv6"/>
+                </div>
+            </div>
+            <div class="cbi-value" id="ipv6_trans">
+                <label class="cbi-field-title">
+                    <%:IPv6 trans%>
+                </label>
+                <div class="cbi-value-field">
+                    <input type="checkbox" id="enable_trans_ipv6" />
+                </div>
+            </div>
+            <div class="cbi-value">
+                <label class="cbi-field-title">
+                    <%:Core%>:
+                </label>
+                <div class="cbi-value-field">
+                    <select name="core" id="core_select">
+                        <% for f in nixio.fs.dir("/etc/openproxy/core") do %>
+                            <option value="<%= '/etc/openproxy/core/' .. f%>">
+                                <%=f%>
+                            </option>
+                            <% end %>
+                    </select>
+                </div>
+            </div>
+            <div class="cbi-value">
+                <label class="cbi-field-title">
+                    <%:Config%>:
+                </label>
+                <div class="cbi-value-field">
+                    <select name="config_path" id="config_path_select">
+                        <% for f in nixio.fs.dir("/etc/openproxy/config") do %>
+                            <option value="<%= '/etc/openproxy/config/' .. f%>">
+                                <%=f%>
+                            </option>
+                            <% end %>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="cbi-value">
+                <input id="btn_apply" type="button" class="btn cbi-button cbi-button-reload" value="<%:Apply%>" />
+            </div>
+        </fieldset>
+        <hr/>
+        <fieldset class="cbi-section">
+            <div class="cbi-value">
+                <label class="cbi-field-title">
+                    <%:OS Info%>:
+                </label>
+                <div class="cbi-value-field" id="os_info">Loading</div>
+            </div>
+            <div class="cbi-value">
+                <label class="cbi-field-title">
+                    <%:Arch Info%>:
+                </label>
+                <div class="cbi-value-field" id="arch_info">Loading</div>
+            </div>
+            <div class="cbi-value">
+                <label class="cbi-field-title">
+                    <%:Pkg Info%>:
+                </label>
+                <div class="cbi-value-field" id="pkg_info">Loading</div>
+            </div>
+            <br/>
+            <div class="cbi-value">
+                <label class="cbi-field-title">
+                    <%:Status%>:
+                </label>
+                <div class="cbi-value-field" id="service_status">Loading...</div>
+            </div>
+            <div class="cbi-value">
+                <label class="cbi-field-title">
+                    <%:Mode%>:
+                </label>
+                <div class="cbi-value-field"><b style="color: green;"> NAT+TPROXY </b></div>
+            </div>
+            <div class="cbi-value">
+                <label class="cbi-field-title">
+                    <%:IPv4%>:
+                </label>
+                <div class="cbi-value-field" id="ipv4_status">Loading</div>
+            </div>
+            <div class="cbi-value">
+                <label class="cbi-field-title">
+                    <%:IPv6%>:
+                </label>
+                <div class="cbi-value-field" id="ipv6_status">Loading</div>
+            </div>
+            <br/>
+            <div class="cbi-value">
+                <input id="yacd_btn" type="button" class="btn cbi-button cbi-button-reload" value="<%:Yacd%>" />&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+        </fieldset>
+    </form>
+    <style>
+        .cbi-value {
+            display: inline-flex;
+            width: 300px !important;
+            flex-wrap: nowrap;
+            align-items: center;
+        }
+        .cbi-field-title {
+            width: 80px;
+        }
+        a {
+            align-content: center;
+        }
+        select {
+            width: 200px !important;
+        }
+        .btn {
+            max-width: 350px;
+            width: 100%;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .btn:active {
+            transform: scale(0.98); /* Slight scale down on click */
+        }
+    </style>
+    <script type="text/javascript">
+        function apply_config() {
+            XHR.post('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "service_apply")%>',
+                {
+                    "enable": document.getElementById("enable_toggle").checked,
+                    "enable_ipv6": document.getElementById("enable_ipv6").checked,
+                    "enable_trans_ipv6": document.getElementById("enable_trans_ipv6").checked,
+                    "core": document.getElementById("core_select").value,
+                    "mode": 'NAT+TPROXY',        // NAT转发DNS请求，TPROXY代理其他请求
+                    "config_path": document.getElementById("config_path_select").value
+                }, function () {
+                    document.getElementById("_service_tips").innerHTML = '<b style="color:white">提交完毕！</b>';
+                });
+        };
+        function get_ip_status() {
+            XHR.get( 'https://api.ipify.org?format=json', null, function (status_code, data) {
+                document.getElementById("ipv4_status").innerHTML = '<b>' + data["ip"] + '</b>';
+            })
+            XHR.get('https://api6.ipify.org?format=json', null, function (status_code, data) {
+                document.getElementById("ipv6_status").innerHTML = '<b>' + data["ip"] + '</b>';
+            })
+        }
+        function get_service_config() {
+            XHR.get('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "config")%>', null,
+                function(status_code, data) {
+                    document.getElementById("enable_toggle").checked = data["enable"] == '1';
+                    document.getElementById("enable_ipv6").checked = data["enable_ipv6"] == '1';
+                    document.getElementById("enable_trans_ipv6").checked = data["enable_trans_ipv6"] == '1';
+                    document.getElementById("core_select").value = data["core"];
+                    document.getElementById("config_path_select").value = data["config_path"];
+                }
+            )
+        }
+        function get_service_status() {
+            // 动态加载服务状态
+            XHR.poll(3,'<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "status")%>', null,
+                function(status_code, data) {
+                    // 更新服务状态
+                    document.getElementById('_service_tips').innerText = data["message"];
+                    // 填充其他字段
+                    document.getElementById("yacd_btn").onclick = () =>  window.open(data["yacd_url"]);
+                    document.getElementById("service_status").innerHTML = data["running"] ? '<b style="color: green;"><%:Running%></b>' : '<b style="color: red;"><%:Stoped%></b>';
+                    document.getElementById("_service_tips").innerHTML = '<b style="color:white">' + data["last_log"] + "</b>";
+                    document.getElementById("os_info").innerHTML = '<b>' + data["os"] + "</b>";
+                    document.getElementById("arch_info").innerHTML = '<b>' + data["arch"] + "</b>";
+                    document.getElementById("pkg_info").innerHTML = '<b>' + data["pkg_cmd"] + "</b>";
+                }
+            )
+        }
+        function switch_ipv6_trans() {
+            var ipv6Trans = document.getElementById('ipv6_trans');
+            var enableIpv6 = document.getElementById('enable_ipv6');
+            if (enableIpv6.checked) {
+                ipv6Trans.style.display = 'inline-flex'; // 显示选项
+            } else {
+                ipv6Trans.style.display = 'none'; // 隐藏选项
+            }
+        }
+        window.onload = function () {
+            get_service_status();   // 获取服务状态
+            get_service_config();   // 获取服务配置参数
+            get_ip_status();        // 获取IPv4/IPv6检测结果
+            document.getElementById('btn_apply').onclick = apply_config;
+            document.getElementById('enable_ipv6').onchange = switch_ipv6_trans;
+        };
+    </script>
+<%+footer%>

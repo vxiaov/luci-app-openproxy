@@ -1,0 +1,56 @@
+<%+cbi/valueheader%>
+<div class="item-container">
+    <label class="cbi-field-title"><%:Custom DNS Config%></label>
+    <div class="cbi-value">
+        <label class="cbi-value-title">
+            <%:Use Custom DNS:%>
+        </label>
+        <div class="cbi-value-field">
+            <input type="checkbox" id="enable_custom_dns">
+        </div>
+    </div>
+    <div class="cbi-value">
+        <label class="cbi-value-title">
+            <%:Dns Port:%>
+        </label>
+        <div class="cbi-value-field">
+            <input type="text" id="dns_port" placeholder="53">
+        </div>
+    </div>
+    <div class="button-container">
+        <input type="submit" class="btn cbi-button cbi-button-reload" id="apply_dns" value="<%:Apply%>" />
+    </div>
+</div>
+<%+cbi/valuefooter%>
+<style>
+    #dns_port{
+        width: 5rem;
+        min-width: 4rem;
+    }
+</style>
+<script type="text/javascript">
+    // 获取DNS配置参数
+    function get_dns_config() {
+        XHR.get('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "dns_config")%>', null,
+            function (status_code, data) {
+                document.getElementById("enable_custom_dns").checked = data["enable_custom_dns"] == '1';
+                document.getElementById("dns_port").value = data["dns_port"] || '';
+            }
+        )
+    }
+    function apply_dns_config() {
+        // 更新 dns 配置信息
+        XHR.post('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "dns_apply")%>',
+        {
+            "enable_custom_dns": document.getElementById("enable_custom_dns").checked,
+            "dns_port": document.getElementById("dns_port").value,
+        }, function () {
+            document.getElementById("_service_tips").innerHTML = '<b style="color:white">提交完毕！</b>';
+        });
+    }
+    window.onload = function () {
+        get_dns_config();
+        document.getElementById('apply_dns').onclick = apply_dns_config;
+    };
+
+</script>

@@ -1,0 +1,167 @@
+#!/bin/sh /etc/rc.common
+START=95
+STOP=10
+
+USE_PROCD=1
+PROC_BIN=$(uci -q get openproxy.config.core)
+
+LANIP=$(uci -q get network.lan.ipaddr)
+WORK_PATH=/etc/openproxy
+DNS_PORT=1053
+REDIR_PORT=3333
+TPROXY_PORT=3330
+YACD_PORT=9090
+YACD_UI="$WORK_PATH/ui"
+YACD_SECRET="router"
+
+TPROXY_MARK=0xff  # 流经clash数据的标记(不同于nftable标记，放置重复处理)
+ROUTER_MARK=0x01  # 路由标记
+CONFIG_FILE=$WORK_PATH/config.yaml  # 生效的启动配置文件路径（每次重启都会重新生成）
+
+RUNLOG_FILE=/tmp/openproxy.log
+
+LOGGER() {
+    line_count=$(cat $RUNLOG_FILE | wc -l)
+    if [ "$line_count" -gt "1000" ] ; then
+        rm $RUNLOG_FILE
+    fi
+    echo -e "$(date +'%Y/%m/%d %H:%M:%S'): $@" | tee -a $RUNLOG_FILE
+}
+
+# 配置 nftables 规则: 配置文件方式
+configure_nftables() {
+
+    LOGGER "添加IPv4路由规则"
+    # IPv4
+    ip rule add fwmark ${ROUTER_MARK} lookup 100
+    ip route add local default dev lo table 100 2>/dev/null
+
+    enable_ipv6=$(uci -q get openproxy.config.ipv6)
+    if [ "$enable_ipv6" == "1" ] ; then
+        LOGGER "添加IPv6路由规则"
+        # IPv6
+        ip -6 rule add fwmark ${ROUTER_MARK} lookup 100
+        ip -6 route add local default dev lo table 100 2>/dev/null
+    fi
+    enable_custom_dns=$(uci -q get openproxy.config.enable_custom_dns)
+    if [ "$enable_custom_dns" == "1" ] ; then
+        dns_port=$(uci -q get openproxy.config.dns_port)
+        [[ -z "$dns_port" ]] && dns_port="53" #默认外部第三方DNS为53端口
+    else
+        dns_port="$DNS_PORT"
+    fi
+    if [ "$dns_port" != "53" ] ; then
+        # 配置DNS转发#
+        if [ -z "$(nft list chain inet fw4 dstnat |grep 'OpenProxy DNS Hijack')" ]; then
+            nft insert rule inet fw4 dstnat position 0 udp dport 53 redirect to "$dns_port" comment \"OpenProxy DNS Hijack\"
+        fi
+    fi
+
+    LOGGER "添加nftable nftset集合"
+    nft -f ${WORK_PATH}/rules_nft/nftset_all_cn_ips.nft
+    LOGGER "添加nftable TPROXY规则"
+    enable_trans_ipv6=$(uci -q get openproxy.config.trans_ipv6)
+    if [ "$enable_trans_ipv6" == "1" ] ; then
+        nft -f ${WORK_PATH}/rules_nft/openproxy_tproxy_trans_ipv6.nft
+    else
+        nft -f ${WORK_PATH}/rules_nft/openproxy_tproxy.nft
+    fi
+}
+
+# 清理 nftables 规则
+cleanup_nftables() {
+    # 清理规则
+    LOGGER "2.清理 nftable TPROXY规则"
+    nft delete table inet oproxy_tproxy
+    dns_port=$(uci -q get openproxy.config.dns_port)
+    [[ -z "$dns_port" ]] && dns_port="$DNS_PORT"
+    if [ "$dns_port" != "53" ] ; then
+        # 配置DNS转发#
+        if [ -z "$(nft list chain inet fw4 dstnat |grep 'OpenProxy DNS Hijack')" ]; then
+            nft delete rule inet fw4 dstnat position 0 udp dport 53 redirect to "$dns_port"
+        fi
+    fi
+    LOGGER "3.清理路由规则"
+    ip rule delete fwmark ${ROUTER_MARK} lookup 100
+    ip -6 rule delete fwmark ${ROUTER_MARK} lookup 100
+    LOGGER "4.重新加载防火墙规则"
+    /etc/init.d/firewall reload 2>/dev/null
+}
+
+
+# 检查Yaml格式启动配置文件： 参数修改、格式化处理等
+check_config_file() {
+    # 检查支持模式
+    LOGGER "开始验证Yaml启动配置文件"
+    if which lsmod >/dev/null 2>&1 ; then
+        lsmod |grep -i ^nft_tproxy >/dev/null 2>&1
+    fi
+    if [ "$?" != "0" ] ; then
+        LOGGER "验证启动条件失败: TPROXY模块缺失，请安装 kmod-nft-tproxy 后再尝试。"
+        return 1
+    fi
+    port_expr=".redir-port=${REDIR_PORT}|.allow-lan=true|.mode=\"rule\"|"
+
+    enable_ipv6=$(uci -q get openproxy.config.ipv6)
+    ipv6_status="false" # 默认关闭IPv6支持
+    if [ "$enable_ipv6" == "1" ] ; then
+        ipv6_status="true"
+    fi
+    dns_enable="true"
+    enable_custom_dns=$(uci -q get openproxy.config.enable_custom_dns)
+    dns_port=$(uci -q get openproxy.config.dns_port)
+    if [ "$enable_custom_dns" == "1" ] ; then
+        # 使用第三方DNS服务,此时禁用Clash内部DNS服务
+        dns_enable="false"
+        dns_port=$(uci -q get openproxy.config.dns_port)
+        [[ -z "$dns_port" ]] && dns_port="53" #默认外部第三方DNS为53端口
+    else
+        dns_port="$DNS_PORT"
+    fi
+    ipv6_expr=".ipv6=${ipv6_status}|.dns.enable=${dns_enable}|.dns.listen=strenv(dns_listen)|.dns.ipv6=${ipv6_status}|.dns.enhanced-mode=strenv(enmode)|"
+    tmode_expr=""
+    mode=$(uci -q get openproxy.config.mode)
+    [[ "$mode" =~ "TPROXY" ]] && tmode_expr=".routing-mark=${TPROXY_MARK}|.tproxy-port=${TPROXY_PORT}|"
+
+    yacd_url="http://${LANIP}:${YACD_PORT}/ui/yacd?hostname=${LANIP}&port=${YACD_PORT}&secret=${YACD_SECRET}"
+    uci set openproxy.config.yacd_url=${yacd_url}
+    uci commit openproxy
+
+    # proxy-providers 和 rule-providers 目录修改
+    proxy_expr='.["proxy-providers"] |= with_entries(select(.value.type == "http") | .value.path |= sub("^.*/", "./providers_proxy/"),select(.value.type == "file") | .value.path |= sub("^.*/", "./custom_proxy/"))|'
+    rule_expr='.["rule-providers"] |= with_entries(select(.value.type == "http") | .value.path |= sub("^.*/", "./providers_rule/"),select(.value.type == "file") | .value.path |= sub("^.*/", "./custom_rule/"))|'
+    
+    # 收尾表达式，结尾没有竖线哦
+    ui_expr=".external-controller=strenv(ext_ctl)|.external-ui=strenv(YACD_UI)|.secret=strenv(tmp_secret)"
+    yq_expr="${port_expr}${ipv6_expr}${tmode_expr}${proxy_expr}${rule_expr}${ui_expr}"
+    config_path="$(uci -q get openproxy.config.config_path)"
+    tmp_secret=${YACD_SECRET} YACD_UI=${YACD_UI} ext_ctl="${LANIP}:${YACD_PORT}" dns_listen=":${dns_port}" enmode="fake-ip" yq e -P "${yq_expr}" ${config_path} > ${CONFIG_FILE}
+}
+start_service() {
+    enable=$(uci -q get openproxy.config.enable)
+    if [ "$enable" == "0" ]; then
+        return
+    fi
+    LOGGER "Starting openproxy service"
+    LOGGER "1.配置nftable规则"
+    configure_nftables
+
+    LOGGER "2.Yaml文件格式化配置"
+    ! check_config_file && return 1
+    LOGGER "Yaml文件检查完成."
+    procd_open_instance
+    procd_set_param command ${PROC_BIN} -d ${WORK_PATH}
+    procd_set_param respawn
+    procd_set_param stdout 1 # 将命令的 stdout 转发到 logd
+    procd_set_param stderr 1  # 同样处理 stderr
+    procd_close_instance
+    LOGGER "3.进程 ${PROC_BIN} 启动完成!"
+}
+
+stop_service() {
+    LOGGER "Stopping openproxy service"
+    LOGGER "1.清理nftable规则"
+    cleanup_nftables
+    killall ${PROC_BIN}
+    LOGGER "5.${PROC_BIN} 进程已经停止！"
+}

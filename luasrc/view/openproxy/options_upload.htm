@@ -1,0 +1,149 @@
+<%+cbi/valueheader%>
+<%
+function getGoArch()
+    local handle = io.popen("uname -m")
+    local arch = handle:read("*a"):gsub("%s+", "")
+    handle:close()
+    if arch == "x86_64" then
+        return "linux-amd64"
+    elseif arch == "i386" or arch == "i686" then
+        return "linux-386"
+    elseif arch == "armv7l" then
+        return "linux-armv7"
+    elseif arch:match("^aarch64") then
+        return "linux-arm64"
+    elseif arch == "ppc64le" then
+        return "linux-ppc64le"
+    elseif arch == "s390x" then
+        return "linux-s390x"
+    else
+        return "linux-"..arch
+    end
+end
+%>
+<div class="item-container">
+    <label class="cbi-field-title" for="ulfiles"><%:Upload File Type%></label>
+    <select name="file_type" id="file_type" class="file-type-select">
+        <option value="config" selected="selected"><%:Config File%>(.yaml)</option>
+        <option value="proxy-provider"><%:Proxy Provider File%>(yaml/base64/uri)</option>
+        <option value="rule-provider"><%:Rule Provider File%>(.yaml)</option>
+        <option value="clash">[Meta] <%:Core File%>(.gz)</option>
+        <option value="country.mmdb"><%:Country.mmdb%>(.mmdb)</option>
+        <option value="backup-file"><%:Backup File%>(.tar.gz)</option>
+    </select>
+    <input class="cbi-input-file" type="file" id="ulfile" name="ulfile" onchange="validateFile();"/>
+    <div class="button-container">
+        <input type="submit" class="btn cbi-button cbi-button-reload" name="upload" value="<%:Upload%>" />
+        <input type="submit" class="btn cbi-button cbi-button-reset" value="<%:Backup%>" onclick="return backup_all_file(this)"/>
+        <a class="btn cbi-button cbi-button-reset" href="https://github.com/vxiaov/luci-app-openproxy/releases/latest" target="_blank"><%:OpenProxy New Version%></a>
+        <a class="btn cbi-button cbi-button-reset" href="https://github.com/MetaCubeX/mihomo/releases/latest" target="_blank"><%:Clash New Version%>(<%=getGoArch()%>)</a>
+    </div>
+</div>
+<%+cbi/valuefooter%>
+
+<style>
+    .item-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content:center;
+    }
+    a {
+        align-content: center;
+    }
+    .cbi-field-title {
+		display: flex;
+        flex: 1 1 100%;
+        margin-bottom: 5px;
+        justify-content:center;
+        align-items: center;
+        width: auto;
+    }
+    .cbi-value {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .file-type-select, .cbi-input-file {
+        width: 100%;
+        max-width: 300px;
+        display: flex;
+    }
+    .button-container {
+        display: flex;
+        gap: 10px;
+        flex-wrap: nowrap;
+        width: 100%;
+        justify-content:center;
+    }
+    .btn {
+        max-width: 350px;
+        width: 100%;
+    }
+	.btn:hover {
+        background-color: #0056b3; /* Hover state color */
+        transform: scale(1.05);
+    }
+
+    .btn:active {
+        background-color: #003d7a; /* Click state color */
+        transform: scale(0.98); /* Slight scale down on click */
+    }
+    @media (max-width: 768px) {
+        .upload-container {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .file-type-select, .cbi-input-file {
+            width: 100%;
+        	max-width: 100%;
+        }
+
+        .button-container {
+            width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .btn {
+            max-width: 100%;
+        }
+    }
+</style>
+
+<script type="text/javascript">
+    function backup_all_file(btn) {
+        btn.disabled = true;
+        window.location.href = '<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "backup")%>';
+        btn.disabled = false;
+        return false;
+    };
+    function validateFile() {
+        const fileInput = document.getElementById('ulfile');
+        const filePath = fileInput.value;
+        const fileTypeSelect = document.getElementById('file_type');
+        const selectedFileType = fileTypeSelect.value;
+
+        // 定义允许的文件扩展名
+        const allowedExtensions = {
+            'config': ['.yaml'],
+            'proxy-provider': ['.yaml', '.txt'],
+            'rule-provider': ['.yaml'],
+            'clash': ['.gz'],
+            'country.mmdb': ['.mmdb'],
+            'backup-file': ['.tar.gz']
+        };
+
+        // 获取当前选择的扩展名
+        const extensions = allowedExtensions[selectedFileType] || [];
+        const isValid = extensions.some(ext => filePath.endsWith(ext));
+
+        if (!isValid) {
+            alert('请上传有效的文件类型：' + extensions.join(', '));
+            fileInput.value = ''; // 清空文件输入
+            return false;
+        }
+    }
+</script>
