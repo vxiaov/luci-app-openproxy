@@ -1,0 +1,11 @@
+*.sh
+*.bak
+*.old
+docs/
+*.list
+*~
+.vscode/
+po/templates/
+*.o
+repos/
+
