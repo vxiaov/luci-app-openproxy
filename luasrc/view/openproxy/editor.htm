@@ -134,6 +134,22 @@
             alert("没有更改内容，无需保存");
         }
     }
+    function deleteFile() {
+        var file = document.getElementById("edit_file").value;
+        var confirmSave = confirm("确认删除『 " + file + " 』文件?");
+        if (confirmSave) {
+            XHR.post('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "delete_file")%>', { file: file }, function () {
+                // 删除 option 选项, 并重新加载文件内容
+                document.getElementById("edit_file").remove(document.getElementById("edit_file").selectedIndex);
+                document.getElementById("edit_file").selectedIndex = 0;
+                loadFileContent();
+                alert("文件删除成功！");
+
+            });
+        } else {
+            alert("删除已取消");
+        }
+    }
     function update_value(key, value) {
         XHR.post('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "update_value")%>', { key: key, value: value }, null);
     }
@@ -149,6 +165,7 @@
         document.getElementById("edit_file").onchange = loadFileContent;
 
         document.getElementById("save-code").addEventListener("click", saveFileContent);
+        document.getElementById("delete-btn").addEventListener("click", deleteFile);
 
         document.getElementById("switch-theme").addEventListener("click", () => {
             currentThemeIndex = (currentThemeIndex + 1) % themes.length;
@@ -195,6 +212,7 @@
         <input type="button" class="btn cbi-button cbi-button-reload" id="toggle-fold" value="<%:toggle fold%>"></input>
         <input type="button" class="btn cbi-button cbi-button-reload" id="switch-theme" value="<%:toogle theme%>"></input>
         <input type="button" class="btn cbi-button cbi-button-reload" id="save-code" value="<%:Save%>"></input>
+        <input type="button" class="btn cbi-button cbi-button-reload" id="delete-btn" value="<%:Delete%>"></input>
     </div>
 </div>
 <div class="editor-container">

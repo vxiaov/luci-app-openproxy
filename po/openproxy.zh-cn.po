@@ -60,7 +60,7 @@ msgstr "配置"
 msgid "Config File"
 msgstr "配置文件"
 
-#: luasrc/view/openproxy/editor.htm:176
+#: luasrc/view/openproxy/editor.htm:188
 msgid "Config File:"
 msgstr "配置文件："
 
@@ -92,6 +92,10 @@ msgstr "Country.mmdb文件"
 msgid "Custom DNS Config"
 msgstr "使用第三方DNS服务(需要自行提前启用第三方DNS服务)"
 
+#: luasrc/view/openproxy/editor.htm:210
+msgid "Delete"
+msgstr "删除"
+
 #: luasrc/model/cbi/openproxy/options.lua:122
 msgid "Dns Config"
 msgstr "DNS配置"
@@ -108,15 +112,15 @@ msgstr "文档与资源"
 msgid "Edit"
 msgstr "编辑"
 
-#: luasrc/view/openproxy/editor.htm:205
+#: luasrc/view/openproxy/editor.htm:218
 msgid "Editor shortcut Ctrl+S save"
 msgstr "按 Ctrl+S 保存文件"
 
-#: luasrc/view/openproxy/editor.htm:205
+#: luasrc/view/openproxy/editor.htm:218
 msgid "Editor shortcut Esc normal"
 msgstr "按 Esc 返回正常显示"
 
-#: luasrc/view/openproxy/editor.htm:205
+#: luasrc/view/openproxy/editor.htm:218
 msgid "Editor shortcut F2 fullScreen"
 msgstr "按 F2 全屏显示"
 
@@ -202,7 +206,7 @@ msgstr "选项"
 msgid "Pkg Info"
 msgstr "包管理命令"
 
-#: luasrc/view/openproxy/editor.htm:186
+#: luasrc/view/openproxy/editor.htm:198
 msgid "Proxy File:"
 msgstr "代理集："
 
@@ -210,7 +214,7 @@ msgstr "代理集："
 msgid "Proxy Provider File"
 msgstr "自定义代理文件"
 
-#: luasrc/view/openproxy/editor.htm:181
+#: luasrc/view/openproxy/editor.htm:193
 msgid "Rule File:"
 msgstr "规则集："
 
@@ -222,11 +226,11 @@ msgstr "自定义规则集"
 msgid "Running"
 msgstr "运行中"
 
-#: luasrc/view/openproxy/editor.htm:197
+#: luasrc/view/openproxy/editor.htm:209
 msgid "Save"
 msgstr "保存"
 
-#: luasrc/view/openproxy/editor.htm:171
+#: luasrc/view/openproxy/editor.htm:183
 msgid "Select Edit File"
 msgstr "编辑文件"
 
@@ -242,7 +246,7 @@ msgstr "状态"
 msgid "Stoped"
 msgstr "已停止"
 
-#: luasrc/view/openproxy/editor.htm:191
+#: luasrc/view/openproxy/editor.htm:203
 msgid "Template File:"
 msgstr "参考模板："
 
@@ -305,14 +309,14 @@ msgstr "MiHoMo 配置示例"
 msgid "open file error."
 msgstr "文件打开失败."
 
-#: luasrc/view/openproxy/editor.htm:195
+#: luasrc/view/openproxy/editor.htm:207
 msgid "toggle fold"
 msgstr "切换折叠"
 
-#: luasrc/view/openproxy/editor.htm:196
+#: luasrc/view/openproxy/editor.htm:208
 msgid "toogle theme"
 msgstr "切换主题"
 
-#: luasrc/controller/openproxy.lua:305
+#: luasrc/controller/openproxy.lua:316
 msgid "unknown"
 msgstr "未知"

@@ -29,6 +29,7 @@ function index()
     -- API接口：动态获取文件内容
     entry({"admin", "services", service_name, "api", "file_content"}, call("api_get_file_content")).leaf = true
     entry({"admin", "services", service_name, "api", "save_file"}, call("api_save_file_content")).leaf = true
+    entry({"admin", "services", service_name, "api", "delete_file"}, call("api_delete_file")).leaf = true
     entry({"admin", "services", service_name, "api", "service_apply"}, call("api_service_apply")).leaf = true
     entry({"admin", "services", service_name, "api", "dns_apply"}, call("api_dns_apply")).leaf = true
     entry({"admin", "services", service_name, "api", "config"}, call("api_get_service_config")).leaf = true
@@ -159,6 +160,17 @@ function api_save_file_content()
         fs.writefile(file_path, content)
         sys.call("yq e -Pi "..file_path)  -- 格式化yaml配置文件
         http.status(200, "File saved successfully")
+    else
+        http.status(400, "Bad request")
+    end
+end
+
+--- 功能： 删除文件
+function api_delete_file()
+    local file_path = http.formvalue("file")
+    if file_path then
+        fs.unlink(file_path)-- 删除配置文件
+        http.status(200, "File is deleted: " .. file_path)
     else
         http.status(400, "Bad request")
     end
