@@ -23,9 +23,10 @@ jobs:
 
     - name: Download OpenWrt Snapshot SDK
       run: |
-        wget -c https://downloads.openwrt.org/snapshots/targets/x86/64/openwrt-sdk-x86-64_gcc-13.3.0_musl.Linux-x86_64.tar.zst
-        tar axf openwrt-sdk-x86-64_gcc-13.3.0_musl.Linux-x86_64.tar.zst
-        ln -sf openwrt-sdk-x86-64_gcc-13.3.0_musl.Linux-x86_64 openwrt_sdk
+        sdk_name="openwrt-sdk-x86-64_gcc-14.2.0_musl.Linux-x86_64"
+        wget -c https://downloads.openwrt.org/snapshots/targets/x86/64/${sdk_name}.tar.zst
+        tar axf ${sdk_name}.tar.zst
+        ln -sf ${sdk_name} openwrt_sdk
 
     - name: Set up OpenWrt SDK
       run: |
@@ -66,9 +67,10 @@ jobs:
 
     - name: Download OpenWrt release SDK
       run: |
-        wget -c https://archive.openwrt.org/releases/23.05.5/targets/x86/64/openwrt-sdk-23.05.5-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.xz
-        tar axf openwrt-sdk-23.05.5-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.xz
-        ln -sf openwrt-sdk-23.05.5-x86-64_gcc-12.3.0_musl.Linux-x86_64 openwrt_sdk
+        sdk_name="openwrt-sdk-24.10.1-x86-64_gcc-13.3.0_musl.Linux-x86_64"
+        wget -c https://downloads.openwrt.org/releases/24.10.1/targets/x86/64/${sdk_name}.tar.zst
+        tar axf ${sdk_name}.tar.xz
+        ln -sf ${sdk_name} openwrt_sdk
 
     - name: Set up OpenWrt SDK
       run: |
