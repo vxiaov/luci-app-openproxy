@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="button-container">
-        <input type="submit" class="btn cbi-button cbi-button-reload" id="apply_dns" value="<%:Apply%>" />
+        <input type="button" class="btn cbi-button cbi-button-reload" onclick="apply_dns_config();" value="<%:Apply%>" />
     </div>
 </div>
 <%+cbi/valuefooter%>
@@ -31,26 +31,33 @@
 <script type="text/javascript">
     // 获取DNS配置参数
     function get_dns_config() {
-        XHR.get('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "dns_config")%>', null,
-            function (status_code, data) {
+        fetch('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "dns_config")%>')
+            .then(response => response.json())
+            .then(data => {
                 document.getElementById("enable_custom_dns").checked = data["enable_custom_dns"] == '1';
                 document.getElementById("dns_port").value = data["dns_port"] || '';
-            }
-        )
+            })
+            .catch(error => console.error('Error fetching DNS config:', error));
     }
     function apply_dns_config() {
         // 更新 dns 配置信息
-        XHR.post('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "dns_apply")%>',
-        {
-            "enable_custom_dns": document.getElementById("enable_custom_dns").checked,
-            "dns_port": document.getElementById("dns_port").value,
-        }, function () {
-            document.getElementById("_service_tips").innerHTML = '<b style="color:white">提交完毕！</b>';
-        });
+        fetch('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "dns_apply")%>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                "enable_custom_dns": document.getElementById("enable_custom_dns").checked ? '1' : '0',
+                "dns_port": document.getElementById("dns_port").value,
+            })
+        }).then(response => response.json()).then(data => {
+            document.getElementById("_service_tips").innerHTML = '<b style="color:white">' + data["message"] + '</b>';
+        }).catch(error => {
+            console.error('Error:', error);
+        })
     }
     window.onload = function () {
         get_dns_config();
-        document.getElementById('apply_dns').onclick = apply_dns_config;
     };
 
 </script>

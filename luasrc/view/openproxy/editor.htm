@@ -106,27 +106,52 @@
     }
     function loadFileContent() {
         var file = document.getElementById("edit_file").value;
-        XHR.get('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "file_content")%>?file=' + encodeURIComponent(file), null, function (response) {
-            document.getElementById("yaml-editor").value = response.responseText;
-            editor.setValue(response.responseText); // 使编辑器填充加载的内容
-            initialContent = response.responseText; // 记录初始内容
-            isFolded = false; // 恢复默认的非折叠状态
-        });
+        fetch('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "file_content")%>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'file=' + encodeURIComponent(file)
+        }).then(response => response.json())
+         .then(data => {
+                if (data.status === 1000) {
+                    // 处理成功，将数据填充到编辑器中
+                    document.getElementById("yaml-editor").value = data.data;
+                    editor.setValue(data.data); // 使编辑器填充加载的内容
+                    initialContent = data.data; // 记录初始内容
+                    isFolded = false; // 恢复默认的非折叠状态
+                } else {
+                    alert(data.message);
+                }
+         }).catch(error => {
+                console.log("加载文件内容失败: " + error);
+         });
     }
     function saveFileContent() {
-        // 判断内容是否变更，如果发生变更则提示是否确认保存内容
         var file = document.getElementById("edit_file").value;
         var content = editor.getValue();
-        // 判断内容是否发生变更
         if (content !== initialContent) {
-            // 提示用户是否保存
             var confirmSave = confirm("内容已更改，是否保存?");
             if (confirmSave) {
-                // 提交保存请求
-                XHR.post('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "save_file")%>', { file: file, content: content }, function () {
-                    alert("文件保存成功！");
-                    initialContent = content; // 保存后更新初始内容
-                });
+                fetch('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "save_file")%>', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'file=' + encodeURIComponent(file) + '&content=' + encodeURIComponent(content)
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.status === 1000) {
+                        alert("文件保存成功！");
+                        initialContent = content; // 更新初始内容
+                    } else {
+                        alert("保存失败: " + data.message);
+                    }
+                    console.log(data);
+                })
+                    .catch(error => {
+                        alert("保存失败: " + error);
+                    });
             } else {
                 alert("保存已取消");
             }
@@ -138,29 +163,55 @@
         var file = document.getElementById("edit_file").value;
         var confirmSave = confirm("确认删除『 " + file + " 』文件?");
         if (confirmSave) {
-            XHR.post('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "delete_file")%>', { file: file }, function () {
-                // 删除 option 选项, 并重新加载文件内容
-                document.getElementById("edit_file").remove(document.getElementById("edit_file").selectedIndex);
-                document.getElementById("edit_file").selectedIndex = 0;
-                loadFileContent();
-                alert("文件删除成功！");
-
-            });
+            fetch('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "delete_file")%>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'file=' + encodeURIComponent(file)
+            }).then(response => response.json())
+               .then(data => {
+                    if (data.status === 1000) {
+                        // 删除 option 选项, 并重新加载文件内容
+                        document.getElementById("edit_file").remove(document.getElementById("edit_file").selectedIndex);
+                        document.getElementById("edit_file").selectedIndex = 0;
+                        loadFileContent();
+                        alert("文件删除成功！");
+                    } else {
+                        alert("删除失败: " + data.message);
+                    }
+               })
         } else {
             alert("删除已取消");
         }
     }
     function update_value(key, value) {
-        XHR.post('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "update_value")%>', { key: key, value: value }, null);
+        fetch('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "update_value")%>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'key=' + encodeURIComponent(key) + '&value=' + encodeURIComponent(value)
+        }).then(response => response.json())
+          .then(data => {
+                if (data.status === 1000) {
+                    console.log("配置更新成功！");
+                } else {
+                    console.log("更新失败: " + data.message);
+                }
+          })
     }
     window.onload = () => {
-        XHR.get('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "load_editor_status")%>', null,
-            function (status_code, data) {
+        fetch('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "load_editor_status")%>', {
+            method: 'GET',
+        }).then(response => response.json())
+         .then(data => {
                 document.getElementById("edit_file").value = data["editor_file"];
                 loadFileContent(); // 页面加载时调用加载文件内容
                 editor.setOption("theme", themes[data["editor_theme"]] || themes[currentThemeIndex]);
-            }
-        )
+         }).catch(error => {
+                console.error('Error fetching editor status:', error);
+         })
         document.getElementById("toggle-fold").addEventListener("click", toggleFold);
         document.getElementById("edit_file").onchange = loadFileContent;
 

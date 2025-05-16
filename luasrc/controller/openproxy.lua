@@ -5,7 +5,6 @@ local http = require "luci.http"
 local fs = require "nixio.fs"
 local sys = require "luci.sys"
 
-
 local config_link = "/etc/openproxy/config.yaml"
 local core_link = "/etc/openproxy/clash"
 local service_name = "openproxy"
@@ -65,6 +64,11 @@ function api_update_value()
     local key = http.formvalue("key")
     local value = http.formvalue("value")
     set_uci_value(key, value)
+    http.prepare_content("application/json")
+    http.write_json({
+        status = 1000,
+        message = "Update success"
+    })
 end
 
 local function get_last_log()
@@ -144,11 +148,21 @@ end
 function api_get_file_content()
     local file_path = http.formvalue("file")
     if file_path and fs.access(file_path) then
-        http.write(fs.readfile(file_path))
+        -- JSON返回 http.write(fs.readfile(file_path))
+        http.prepare_content("application/json")
+        http.write_json({
+            status = 1000,
+            message = "File content",
+            data = fs.readfile(file_path)
+        })
         uci:set(service_name, "config", "editor_file", file_path)
         uci:commit(service_name)
     else
-        http.status(404, "File not found," .. file_path)
+        http.prepare_content("application/json")
+        http.write_json({
+            status = 404,
+            message = "File not found:".. file_path
+        })
     end
 end
 
@@ -159,9 +173,18 @@ function api_save_file_content()
     if file_path and content then
         fs.writefile(file_path, content)
         sys.call("yq e -Pi "..file_path)  -- 格式化yaml配置文件
-        http.status(200, "File saved successfully")
+        http.prepare_content("application/json")
+        http.write_json({
+            status = 1000,
+            message = "File saved successfully",
+            data = content
+        })
     else
-        http.status(400, "Bad request")
+        http.prepare_content("application/json")
+        http.write_json({
+            status = 400,
+            message = "Bad request"
+        })
     end
 end
 
@@ -170,9 +193,17 @@ function api_delete_file()
     local file_path = http.formvalue("file")
     if file_path then
         fs.unlink(file_path)-- 删除配置文件
-        http.status(200, "File is deleted: " .. file_path)
+        http.prepare_content("application/json")
+        http.write_json({
+            status = 1000,
+            message = "File is deleted: ".. file_path
+        })
     else
-        http.status(400, "Bad request")
+        http.prepare_content("application/json")
+        http.write_json({
+            status = 400,
+            message = "Bad request"
+        })
     end
 end
 
@@ -258,7 +289,6 @@ function api_get_dns_config()
     local status = {}
     status.enable_custom_dns = uci:get(service_name, "config", "enable_custom_dns")
     status.dns_port = uci:get(service_name, "config", "dns_port")
-    -- 返回 JSON 格式的状态信息
     http.prepare_content("application/json")
     http.write_json(status)
 end

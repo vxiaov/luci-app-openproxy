@@ -147,36 +147,45 @@
     </style>
     <script type="text/javascript">
         function apply_config() {
-            XHR.post('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "service_apply")%>',
-                {
+            fetch('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "service_apply")%>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
                     "enable": document.getElementById("enable_toggle").checked,
                     "enable_ipv6": document.getElementById("enable_ipv6").checked,
                     "enable_trans_ipv6": document.getElementById("enable_trans_ipv6").checked,
                     "core": document.getElementById("core_select").value,
-                    "mode": 'NAT+TPROXY',        // NAT转发DNS请求，TPROXY代理其他请求
+                    "mode": 'NAT+TPROXY',
                     "config_path": document.getElementById("config_path_select").value
-                }, function () {
-                    document.getElementById("_service_tips").innerHTML = '<b style="color:white">提交完毕！</b>';
-                });
+                })
+            }).then(response => response.json()).then(data => {
+                document.getElementById("_service_tips").innerHTML = '<b style="color:white">' + data["message"] + '</b>';
+            }).catch(error => {
+                console.error('Error:', error);
+            });
         };
         function get_ip_status() {
-            XHR.get( 'https://api.ipify.org?format=json', null, function (status_code, data) {
+            fetch('https://api.ipify.org?format=json').then(response => response.json()).then(data => {
                 document.getElementById("ipv4_status").innerHTML = '<b>' + data["ip"] + '</b>';
+            }).catch(error => {
+                console.error('Error:', error);
             })
-            XHR.get('https://api6.ipify.org?format=json', null, function (status_code, data) {
+            fetch('https://api6.ipify.org?format=json').then(response => response.json()).then(data => {
                 document.getElementById("ipv6_status").innerHTML = '<b>' + data["ip"] + '</b>';
+            }).catch(error => {
+                console.error('Error:', error);
             })
         }
         function get_service_config() {
-            XHR.get('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "config")%>', null,
-                function(status_code, data) {
-                    document.getElementById("enable_toggle").checked = data["enable"] == '1';
-                    document.getElementById("enable_ipv6").checked = data["enable_ipv6"] == '1';
-                    document.getElementById("enable_trans_ipv6").checked = data["enable_trans_ipv6"] == '1';
-                    document.getElementById("core_select").value = data["core"];
-                    document.getElementById("config_path_select").value = data["config_path"];
-                }
-            )
+            fetch('<%=luci.dispatcher.build_url("admin", "services", "openproxy", "api", "config")%>').then(response => response.json()).then(data => {
+                document.getElementById("enable_toggle").checked = data["enable"] == '1';
+                document.getElementById("enable_ipv6").checked = data["enable_ipv6"] == '1';
+                document.getElementById("enable_trans_ipv6").checked = data["enable_trans_ipv6"] == '1';
+                document.getElementById("core_select").value = data["core"];
+                document.getElementById("config_path_select").value = data["config_path"];
+            })
         }
         function get_service_status() {
             // 动态加载服务状态
