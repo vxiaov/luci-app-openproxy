@@ -69,8 +69,8 @@ jobs:
       run: |
         sdk_name="openwrt-sdk-24.10.1-x86-64_gcc-13.3.0_musl.Linux-x86_64"
         wget -c https://downloads.openwrt.org/releases/24.10.1/targets/x86/64/${sdk_name}.tar.zst
-        tar axf ${sdk_name}.tar.xz
-        ln -sf ${sdk_name} openwrt_sdk
+        tar axf $sdk_name.tar.zst
+        ln -sf $sdk_name openwrt_sdk
 
     - name: Set up OpenWrt SDK
       run: |
