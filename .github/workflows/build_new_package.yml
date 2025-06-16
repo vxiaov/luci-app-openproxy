@@ -25,7 +25,7 @@ jobs:
       run: |
         PAGE_CONTENT=$(curl -s https://downloads.openwrt.org/snapshots/targets/x86/64/)
         # 使用正则表达式提取 SDK 文件名（支持 .tar.zst 格式）
-        SDK_FILENAME=$(echo "$PAGE_CONTENT" | grep -oP 'openwrt-sdk-x86-64_gcc-.*+_musl\.Linux-x86_64\.tar\.zst' | head -1)
+        SDK_FILENAME=$(echo "$PAGE_CONTENT" | grep -oP 'openwrt-sdk-x86-64_gcc-.*?_musl\.Linux-x86_64\.tar\.zst' | head -1)
         
         if [ -z "$SDK_FILENAME" ]; then
           echo "未找到 SDK 文件"
@@ -82,7 +82,7 @@ jobs:
       run: |
         # 找到 SDK 名称 #
         PAGE_CONTENT=$(curl -s https://downloads.openwrt.org/releases/24.10.1/targets/x86/64/)
-        SDK_FILENAME=$(echo "$PAGE_CONTENT" | grep -oP 'openwrt-sdk-24\.10\.1-x86-64_gcc-.*+_musl\.Linux-x86_64\.tar\.zst' | head -1)
+        SDK_FILENAME=$(echo "$PAGE_CONTENT" | grep -oP 'openwrt-sdk-24\.10\.1-x86-64_gcc-.*?_musl\.Linux-x86_64\.tar\.zst' | head -1)
         if [ -z "$SDK_FILENAME" ]; then
           echo "未找到 SDK 文件"
           exit 1
