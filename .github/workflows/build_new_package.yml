@@ -23,7 +23,20 @@ jobs:
 
     - name: Download OpenWrt Snapshot SDK
       run: |
-        sdk_name="openwrt-sdk-x86-64_gcc-14.2.0_musl.Linux-x86_64"
+        PAGE_CONTENT=$(curl -s https://downloads.openwrt.org/snapshots/targets/x86/64/)
+        # 使用正则表达式提取 SDK 文件名（支持 .tar.zst 格式）
+        SDK_FILENAME=$(echo "$PAGE_CONTENT" | grep -oP 'openwrt-sdk-x86-64_gcc-.*+_musl\.Linux-x86_64\.tar\.zst' | head -1)
+        
+        if [ -z "$SDK_FILENAME" ]; then
+          echo "未找到 SDK 文件"
+          exit 1
+        fi
+        
+        # 构建完整 URL
+        SDK_URL="https://downloads.openwrt.org/snapshots/targets/x86/64/$SDK_FILENAME"
+
+        echo "找到 SDK 文件: $SDK_FILENAME"
+        sdk_name=${SDK_FILENAME%.tar.zst}
         wget -c https://downloads.openwrt.org/snapshots/targets/x86/64/${sdk_name}.tar.zst
         tar axf ${sdk_name}.tar.zst
         ln -sf ${sdk_name} openwrt_sdk
@@ -67,7 +80,15 @@ jobs:
 
     - name: Download OpenWrt release SDK
       run: |
-        sdk_name="openwrt-sdk-24.10.1-x86-64_gcc-13.3.0_musl.Linux-x86_64"
+        # 找到 SDK 名称 #
+        PAGE_CONTENT=$(curl -s https://downloads.openwrt.org/releases/24.10.1/targets/x86/64/)
+        SDK_FILENAME=$(echo "$PAGE_CONTENT" | grep -oP 'openwrt-sdk-24\.10\.1-x86-64_gcc-.*+_musl\.Linux-x86_64\.tar\.zst' | head -1)
+        if [ -z "$SDK_FILENAME" ]; then
+          echo "未找到 SDK 文件"
+          exit 1
+        fi
+        # 构建完整 URL
+        sdk_name=${SDK_FILENAME%.tar.zst}
         wget -c https://downloads.openwrt.org/releases/24.10.1/targets/x86/64/${sdk_name}.tar.zst
         tar axf $sdk_name.tar.zst
         ln -sf $sdk_name openwrt_sdk
